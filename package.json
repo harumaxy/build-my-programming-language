@@ -1,23 +1,27 @@
 {
-  "name": "build-my-programming-language",
-  "module": "index.ts",
-  "type": "module",
-  "private": true,
-  "scripts": {
-    "start": "bun run index.ts",
-    "repl": "bun run index.ts",
-    "run": "bun run index.ts",
-    "test": "vitest",
-    "test:run": "vitest run"
-  },
-  "devDependencies": {
-    "@types/bun": "latest",
-    "vitest": "^4.0.17"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  },
-  "dependencies": {
-    "chevrotain": "^11.1.0"
-  }
+	"name": "build-my-programming-language",
+	"module": "index.ts",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"start": "bun run index.ts",
+		"repl": "bun run index.ts",
+		"run": "bun run index.ts",
+		"test": "vitest",
+		"test:run": "vitest run",
+		"lint": "biome lint .",
+		"format": "biome format --write .",
+		"check": "biome check --write ."
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.3.11",
+		"@types/bun": "latest",
+		"vitest": "^4.0.17"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	},
+	"dependencies": {
+		"chevrotain": "^11.1.0"
+	}
 }
