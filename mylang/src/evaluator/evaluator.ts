@@ -1,5 +1,5 @@
 import type { BlockStatement, Expression, Program, Statement } from "../ast";
-import { builtins, createPrintFn } from "./builtins";
+import { builtins, createPrintFn, type OutputHandler } from "./builtins";
 import {
 	createArray,
 	createBoolean,
@@ -11,8 +11,6 @@ import {
 	isTruthy,
 	type Value,
 } from "./values";
-
-export type OutputHandler = (output: string) => void;
 
 export interface EvaluatorOptions {
 	onOutput?: OutputHandler;
