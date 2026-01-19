@@ -1,106 +1,64 @@
+# CLAUDE.md
 
-Default to using Bun instead of Node.js.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-- Use `bun <file>` instead of `node <file>` or `ts-node <file>`
-- Use `bun test` instead of `jest` or `vitest`
-- Use `bun build <file.html|file.ts|file.css>` instead of `webpack` or `esbuild`
-- Use `bun install` instead of `npm install` or `yarn install` or `pnpm install`
-- Use `bun run <script>` instead of `npm run <script>` or `yarn run <script>` or `pnpm run <script>`
-- Bun automatically loads .env, so don't use dotenv.
+## Project Overview
 
-## APIs
+MyLang is a programming language interpreter implemented in TypeScript as a job portfolio project. It follows a classic tree-walking interpreter architecture: Source Code → Lexer → Tokens → Parser → AST → Evaluator → Result.
 
-- `Bun.serve()` supports WebSockets, HTTPS, and routes. Don't use `express`.
-- `bun:sqlite` for SQLite. Don't use `better-sqlite3`.
-- `Bun.redis` for Redis. Don't use `ioredis`.
-- `Bun.sql` for Postgres. Don't use `pg` or `postgres.js`.
-- `WebSocket` is built-in. Don't use `ws`.
-- Prefer `Bun.file` over `node:fs`'s readFile/writeFile
-- Bun.$`ls` instead of execa.
+## Build & Test Commands
 
-## Testing
+```bash
+# Run the REPL
+npm run start
+npm run repl
 
-Use `bun test` to run tests.
+# Run tests (watch mode)
+npm run test
 
-```ts#index.test.ts
-import { test, expect } from "bun:test";
+# Run tests once
+npm run test:run
 
-test("hello world", () => {
-  expect(1).toBe(1);
-});
+# CLI usage
+bun run index.ts              # Start REPL
+bun run index.ts <file>       # Execute a .ml file
+bun run index.ts -e "<code>"  # Execute inline code
 ```
 
-## Frontend
+## Architecture
 
-Use HTML imports with `Bun.serve()`. Don't use `vite`. HTML imports fully support React, CSS, Tailwind.
+The interpreter is built using Chevrotain (TypeScript parser library) and consists of four main components:
 
-Server:
+### Lexer (`/src/lexer/`)
+- `tokens.ts` - Token definitions using Chevrotain's `createToken`
+- `lexer.ts` - Tokenizer that produces token stream from source code
 
-```ts#index.ts
-import index from "./index.html"
+### Parser (`/src/parser/`)
+- `parser.ts` - Recursive descent parser using Chevrotain's `EmbeddedActionsParser`
+- Generates AST directly during parsing via embedded actions
+- Implements operator precedence through grammar structure
 
-Bun.serve({
-  routes: {
-    "/": index,
-    "/api/users/:id": {
-      GET: (req) => {
-        return new Response(JSON.stringify({ id: req.params.id }));
-      },
-    },
-  },
-  // optional websocket support
-  websocket: {
-    open: (ws) => {
-      ws.send("Hello, world!");
-    },
-    message: (ws, message) => {
-      ws.send(message);
-    },
-    close: (ws) => {
-      // handle close
-    }
-  },
-  development: {
-    hmr: true,
-    console: true,
-  }
-})
-```
+### AST (`/src/ast/`)
+- `ast.ts` - Node type definitions using TypeScript discriminated unions
+- All nodes have a `type` field for discrimination
+- Helper functions like `numberLiteral()`, `binaryExpression()` for node creation
 
-HTML files can import .tsx, .jsx or .js files directly and Bun's bundler will transpile & bundle automatically. `<link>` tags can point to stylesheets and Bun's CSS bundler will bundle.
+### Evaluator (`/src/evaluator/`)
+- `evaluator.ts` - Tree-walking evaluator with recursive `evaluate()` method
+- `values.ts` - Runtime value types and `Environment` class for lexical scoping
+- `builtins.ts` - Built-in functions (`print`, `len`, `first`, `last`, `rest`, `push`, `pop`, `type`)
 
-```html#index.html
-<html>
-  <body>
-    <h1>Hello, world!</h1>
-    <script type="module" src="./frontend.tsx"></script>
-  </body>
-</html>
-```
+## Language Features
 
-With the following `frontend.tsx`:
+- **Types:** number, string, boolean, null, array, object, function
+- **Variables:** `let` (mutable) and `const` (immutable)
+- **Control flow:** if/else/elif, while, for (C-style)
+- **Functions:** Named declarations, anonymous expressions, closures, recursion
+- **Operators:** Arithmetic (`+`, `-`, `*`, `/`, `%`), comparison, logical (`&&`, `||`, `!`)
 
-```tsx#frontend.tsx
-import React from "react";
+## Key Design Patterns
 
-// import .css files directly and it works
-import './index.css';
-
-import { createRoot } from "react-dom/client";
-
-const root = createRoot(document.body);
-
-export default function Frontend() {
-  return <h1>Hello, world!</h1>;
-}
-
-root.render(<Frontend />);
-```
-
-Then, run index.ts
-
-```sh
-bun --hot ./index.ts
-```
-
-For more information, read the Bun API docs in `node_modules/bun-types/docs/**.md`.
+- Environment chain for lexical scoping - each scope has a parent reference
+- Closures capture their defining environment
+- AST nodes are plain objects with discriminated union types
+- Parser uses embedded actions to build AST during parsing (no separate tree construction phase)
