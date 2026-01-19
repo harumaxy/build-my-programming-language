@@ -79,23 +79,27 @@ class MyLanguageParser extends EmbeddedActionsParser {
     ]);
   });
 
-  // let x = expr;
+  // let x = expr
   private letStatement = this.RULE("letStatement", (): Statement => {
     this.CONSUME(Let);
     const name = this.CONSUME(Identifier).image;
     this.CONSUME(Equal);
     const value = this.SUBRULE(this.expression);
-    this.CONSUME(Semicolon);
+    this.OPTION(() => {
+      this.CONSUME(Semicolon);
+    });
     return { type: "LetStatement", name, value };
   });
 
-  // const x = expr;
+  // const x = expr
   private constStatement = this.RULE("constStatement", (): Statement => {
     this.CONSUME(Const);
     const name = this.CONSUME(Identifier).image;
     this.CONSUME(Equal);
     const value = this.SUBRULE(this.expression);
-    this.CONSUME(Semicolon);
+    this.OPTION(() => {
+      this.CONSUME(Semicolon);
+    });
     return { type: "ConstStatement", name, value };
   });
 
@@ -183,14 +187,16 @@ class MyLanguageParser extends EmbeddedActionsParser {
     return { type: "FunctionDeclaration", name, params, body };
   });
 
-  // return expr?;
+  // return expr?
   private returnStatement = this.RULE("returnStatement", (): Statement => {
     this.CONSUME(Return);
     let value: Expression | undefined;
     this.OPTION(() => {
       value = this.SUBRULE(this.expression);
     });
-    this.CONSUME(Semicolon);
+    this.OPTION2(() => {
+      this.CONSUME(Semicolon);
+    });
     return { type: "ReturnStatement", value };
   });
 
@@ -205,10 +211,12 @@ class MyLanguageParser extends EmbeddedActionsParser {
     return { type: "BlockStatement", body };
   });
 
-  // expr;
+  // expr; (セミコロンはオプション)
   private expressionStatement = this.RULE("expressionStatement", (): Statement => {
     const expression = this.SUBRULE(this.expression);
-    this.CONSUME(Semicolon);
+    this.OPTION(() => {
+      this.CONSUME(Semicolon);
+    });
     return { type: "ExpressionStatement", expression };
   });
 

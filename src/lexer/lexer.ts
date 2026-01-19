@@ -1,4 +1,4 @@
-import { Lexer, IToken, ILexingError } from "chevrotain";
+import { Lexer, type ILexingError, type IToken } from "chevrotain";
 import { allTokens } from "./tokens";
 
 // Lexerインスタンスを作成
