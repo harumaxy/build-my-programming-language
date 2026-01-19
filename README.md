@@ -2,8 +2,8 @@
 
 プログラミング言語を実装してみる。
 
-- [開発メモ](./docs.md)
-- [構文](./syntax.md)
+- [開発メモ](mylang/docs.md)
+- [構文](mylang/syntax.md)
 
 ## 実行する
 
