@@ -1,5 +1,5 @@
 {
-  "name": "build-my-programming-language",
+  "name": "mylang",
   "module": "index.ts",
   "type": "module",
   "private": true,
