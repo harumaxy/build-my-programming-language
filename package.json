@@ -3,6 +3,13 @@
   "module": "index.ts",
   "type": "module",
   "private": true,
+  "scripts": {
+    "start": "bun run index.ts",
+    "repl": "bun run index.ts",
+    "run": "bun run index.ts",
+    "test": "vitest",
+    "test:run": "vitest run"
+  },
   "devDependencies": {
     "@types/bun": "latest",
     "vitest": "^4.0.17"

@@ -164,16 +164,16 @@ function evaluate(node: Expression, env: Environment): Value {
 
 ### Phase 2: 制御構文
 
-- [ ] if/else文
-- [ ] while/forループ
-- [ ] 関数定義と呼び出し
-- [ ] スコープとクロージャ
+- [x] if/else文
+- [x] while/forループ
+- [x] 関数定義と呼び出し
+- [x] スコープとクロージャ
 
 ### Phase 3: データ構造
 
-- [ ] 文字列操作
-- [ ] 配列
-- [ ] オブジェクト/辞書
+- [x] 文字列操作
+- [x] 配列
+- [x] オブジェクト/辞書
 
 ### Phase 4: 発展
 
