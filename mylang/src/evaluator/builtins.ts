@@ -8,15 +8,28 @@ import {
 	valueToString,
 } from "./values";
 
+export type OutputHandler = (output: string) => void;
+
 // ========== 組み込み関数 ==========
 
-const print: BuiltinFunctionValue = {
-	type: "builtin",
-	fn: (...args: Value[]): Value => {
-		console.log(...args.map(valueToString));
-		return createNull();
-	},
-};
+/**
+ * print関数を作成する（オプションの出力ハンドラ付き）
+ */
+export function createPrintFn(onOutput?: OutputHandler): BuiltinFunctionValue {
+	return {
+		type: "builtin",
+		fn: (...args: Value[]): Value => {
+			const output = args.map(valueToString).join(" ");
+			// コールバックがあればそれを使用、なければconsole.log
+			if (onOutput) {
+				onOutput(output);
+			} else {
+				console.log(output);
+			}
+			return createNull();
+		},
+	};
+}
 
 const len: BuiltinFunctionValue = {
 	type: "builtin",
@@ -107,8 +120,8 @@ const rest: BuiltinFunctionValue = {
 };
 
 // ========== エクスポート ==========
+// printはcreate PrintFnで動的に作成するため、ここには含めない
 export const builtins: Record<string, BuiltinFunctionValue> = {
-	print,
 	len,
 	type: typeOf,
 	push,

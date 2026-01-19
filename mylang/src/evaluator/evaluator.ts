@@ -1,5 +1,5 @@
 import type { BlockStatement, Expression, Program, Statement } from "../ast";
-import { builtins } from "./builtins";
+import { builtins, createPrintFn } from "./builtins";
 import {
 	createArray,
 	createBoolean,
@@ -12,12 +12,23 @@ import {
 	type Value,
 } from "./values";
 
+export type OutputHandler = (output: string) => void;
+
+export interface EvaluatorOptions {
+	onOutput?: OutputHandler;
+}
+
 export class Evaluator {
 	private globalEnv: Environment;
 
-	constructor() {
+	constructor(options: EvaluatorOptions = {}) {
 		this.globalEnv = new Environment();
-		// 組み込み関数を登録
+
+		// print関数を作成（出力ハンドラ付き）
+		const printFn = createPrintFn(options.onOutput);
+		this.globalEnv.define("print", printFn);
+
+		// その他の組み込み関数を登録
 		for (const [name, fn] of Object.entries(builtins)) {
 			this.globalEnv.define(name, fn);
 		}
