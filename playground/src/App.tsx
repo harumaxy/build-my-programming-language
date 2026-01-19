@@ -1,5 +1,5 @@
-import { useState, useCallback } from "react";
 import { evaluate } from "mylang";
+import { useCallback, useState } from "react";
 import "./App.css";
 
 const SAMPLE_CODE = `// MyLang Playground
