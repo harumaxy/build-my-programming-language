@@ -372,7 +372,8 @@ export class Evaluator {
 			// 新しいスコープを作成（クロージャの環境を親に）
 			const fnEnv = callee.env.extend();
 			for (let i = 0; i < callee.params.length; i++) {
-				fnEnv.define(callee.params[i], args[i]);
+				// biome-ignore lint/style/noNonNullAssertion: OK
+				fnEnv.define(callee.params[i]!, args[i]!);
 			}
 
 			const result = this.evaluateBlockStatement(callee.body, fnEnv);
@@ -429,7 +430,8 @@ export class Evaluator {
 			if (idx < 0 || idx >= obj.elements.length) {
 				return createNull();
 			}
-			return obj.elements[idx];
+			// biome-ignore lint/style/noNonNullAssertion: OK
+			return obj.elements[idx]!;
 		}
 
 		if (obj.type === "string" && index.type === "number") {
@@ -437,7 +439,8 @@ export class Evaluator {
 			if (idx < 0 || idx >= obj.value.length) {
 				return createNull();
 			}
-			return createString(obj.value[idx]);
+			// biome-ignore lint/style/noNonNullAssertion: OK
+			return createString(obj.value[idx]!);
 		}
 
 		if (obj.type === "object" && index.type === "string") {
