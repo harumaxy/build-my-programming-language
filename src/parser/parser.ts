@@ -40,12 +40,13 @@ import {
   Semicolon,
   Colon,
 } from "../lexer";
-import {
+import type {
   Program,
   Statement,
   Expression,
   BinaryOperator,
   BlockStatement,
+  IfStatement,
 } from "../ast";
 
 class MyLanguageParser extends EmbeddedActionsParser {
@@ -111,11 +112,11 @@ class MyLanguageParser extends EmbeddedActionsParser {
     this.CONSUME(RParen);
     const consequence = this.SUBRULE(this.blockStatement) as BlockStatement;
 
-    let alternative: BlockStatement | Statement | undefined;
+    let alternative: BlockStatement | IfStatement | undefined;
     this.OPTION(() => {
       this.CONSUME(Else);
       alternative = this.OR([
-        { ALT: () => this.SUBRULE2(this.ifStatement) },
+        { ALT: () => this.SUBRULE2(this.ifStatement) as IfStatement },
         { ALT: () => this.SUBRULE2(this.blockStatement) as BlockStatement },
       ]);
     });

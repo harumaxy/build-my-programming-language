@@ -1,5 +1,49 @@
 // メインエクスポート
-export * from "./lexer";
+// Note: lexer tokens (Identifier, NumberLiteral, StringLiteral) conflict with AST types
+// Export lexer selectively to avoid naming conflicts
+export {
+  allTokens,
+  lex,
+  Let,
+  Const,
+  If,
+  Else,
+  Function,
+  Return,
+  While,
+  For,
+  True,
+  False,
+  Null,
+  Plus,
+  Minus,
+  Multiply,
+  Divide,
+  Modulo,
+  EqualEqual,
+  NotEqual,
+  Less,
+  Greater,
+  LessEqual,
+  GreaterEqual,
+  And,
+  Or,
+  Not,
+  Equal,
+  LParen,
+  RParen,
+  LBrace,
+  RBrace,
+  LBracket,
+  RBracket,
+  Comma,
+  Semicolon,
+  Colon,
+  // Rename conflicting tokens
+  Identifier as IdentifierToken,
+  NumberLiteral as NumberLiteralToken,
+  StringLiteral as StringLiteralToken,
+} from "./lexer";
 export * from "./ast";
 export * from "./parser";
 export * from "./evaluator";
