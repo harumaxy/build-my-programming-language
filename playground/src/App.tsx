@@ -1,3 +1,6 @@
+import { evaluate } from "mylang";
+
 export function App() {
-  return <h1>MyLang Playground</h1>;
+	evaluate;
+	return <h1>MyLang Playground</h1>;
 }
